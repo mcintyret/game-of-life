@@ -70,12 +70,7 @@ public class Game {
         stopRequested = false;
         hasStarted = true;
         while (doGeneration()) {
-            ex.execute(new Runnable() {
-                @Override
-                public void run() {
-                    gui.updateOnGeneration();
-                }
-            });
+            ex.execute(gui::updateOnGeneration);
             try {
                 Thread.sleep(sleepInterval);
             } catch (InterruptedException e) {

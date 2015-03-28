@@ -34,8 +34,8 @@ import java.util.concurrent.Executors;
 public class Gui extends JFrame {
     private static final long serialVersionUID = 1L;
 
-    public static final String savedGrids = FileHandling.rootFilePath + "savedGrids";
-    private static final Border border = BorderFactory.createLineBorder(new Color(237, 237, 237), 1);
+    private static final String SAVED_GRIDS = FileHandling.ROOT_FILE_PATH + "savedGrids";
+    private static final Border BORDER = BorderFactory.createLineBorder(new Color(237, 237, 237), 1);
 
     private final JPanel mainPanel = new JPanel();
     private final JToolBar toolBar = new JToolBar();
@@ -87,10 +87,10 @@ public class Gui extends JFrame {
 
     @SuppressWarnings("unchecked")
     private void loadSavedGrids() {
-        if (FileHandling.exists(savedGrids)) {
-            savedGridsMap = (Map<String, boolean[][]>) FileHandling.Deserialize(savedGrids);
+        if (FileHandling.exists(SAVED_GRIDS)) {
+            savedGridsMap = (Map<String, boolean[][]>) FileHandling.deserialize(SAVED_GRIDS);
         } else {
-            savedGridsMap = new HashMap<String, boolean[][]>();
+            savedGridsMap = new HashMap<>();
         }
     }
 
@@ -127,9 +127,7 @@ public class Gui extends JFrame {
         toolBar.add(clearButton);
 
         wrapButton.addActionListener(arg0 -> {
-            ex.execute(() -> {
-                game.toggleWrap();
-            });
+            ex.execute(game::toggleWrap);
         });
         toolBar.add(wrapButton);
 
@@ -154,7 +152,7 @@ public class Gui extends JFrame {
                         synchronized (savedGridsMap) {
                             String name = savedNameField.getText();
                             savedGridsMap.put(name, game.getGrid());
-                            FileHandling.Serialize(savedGridsMap, savedGrids);
+                            FileHandling.serialize(savedGridsMap, SAVED_GRIDS);
                             updateLoadableGrids(name);
                         }
                     }
@@ -233,7 +231,7 @@ public class Gui extends JFrame {
         public Square(int row, int col) {
             this.row = row;
             this.col = col;
-            setBorder(border);
+            setBorder(BORDER);
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
